@@ -19,7 +19,7 @@ pub struct VolumeProjectionMaterial {
 ///
 /// Rendering style of a volume projection. Supports several related styles.
 /// 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub enum VolumeProjectionRenderingStyle {
     /// The color of the pixel will be the same as the minimum intensity encountered on the ray path.
     MinimumIntensityProjection,

@@ -33,7 +33,7 @@ pub async fn run() {
         .unwrap()
         .deserialize("")
         .unwrap();
-    let voxel_grid = VoxelGrid::<VolumeProjectionMaterial>::new(&context, &cpu_voxel_grid);
+    let mut voxel_grid = VoxelGrid::<VolumeProjectionMaterial>::new(&context, &cpu_voxel_grid);
 
     let ambient = AmbientLight::new(&context, 0.4, Srgba::WHITE);
     let directional1 = DirectionalLight::new(&context, 2.0, Srgba::WHITE, vec3(-1.0, -1.0, -1.0));
@@ -52,13 +52,22 @@ pub async fn run() {
                 use three_d::egui::*;
                 SidePanel::left("side_panel").show(gui_context, |ui| {
                     ui.heading("Debug Panel");
-                    /*
-                    ui.add(
-                        Slider::new(&mut voxel_grid.material.threshold, 0.0..=1.0)
-                            .text("Threshold"),
+                    ui.label("Rendering style");
+                    ui.radio_value(
+                        &mut voxel_grid.material.rendering_style,
+                        VolumeProjectionRenderingStyle::MaximumIntansityProjection,
+                        "Maximum intensity projection",
                     );
-                    ui.color_edit_button_rgba_unmultiplied(&mut color);
-                    */
+                    ui.radio_value(
+                        &mut voxel_grid.material.rendering_style,
+                        VolumeProjectionRenderingStyle::MinimumIntensityProjection,
+                        "Minimum intensity projection",
+                    );
+                    ui.radio_value(
+                        &mut voxel_grid.material.rendering_style,
+                        VolumeProjectionRenderingStyle::AverageIntensityProjection,
+                        "Average intensity projection",
+                    );
                 });
                 panel_width = gui_context.used_rect().width();
             },

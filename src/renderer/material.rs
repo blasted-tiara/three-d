@@ -75,6 +75,10 @@ mod isosurface_material;
 #[doc(inline)]
 pub use isosurface_material::*;
 
+mod volume_projection_material;
+#[doc(inline)]
+pub use volume_projection_material::*;
+
 use std::{ops::Deref, sync::Arc};
 
 ///

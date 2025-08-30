@@ -1,22 +1,10 @@
 uniform vec3 cameraPosition;
-uniform vec4 surfaceColor;
-uniform float metallic;
-uniform float roughness;
 uniform sampler3D tex;
 uniform vec3 size;
-uniform float threshold;
-uniform vec3 h;
 
 in vec3 pos;
 
 layout (location = 0) out vec4 outColor;
-
-vec3 estimate_normal(vec3 uvw) {
-    float x = texture(tex, uvw + vec3(h.x, 0.0, 0.0)).r - texture(tex, uvw - vec3(h.x, 0.0, 0.0)).r;
-    float y = texture(tex, uvw + vec3(0.0, h.y, 0.0)).r - texture(tex, uvw - vec3(0.0, h.y, 0.0)).r;
-    float z = texture(tex, uvw + vec3(0.0, 0.0, h.z)).r - texture(tex, uvw - vec3(0.0, 0.0, h.z)).r;
-    return -normalize(vec3(x, y, z) / (2.0 * h));
-}
 
 void main() {
     int steps = 200;
@@ -49,9 +37,8 @@ void main() {
         rayPos += step;
     }
 
-    vec3 normal = estimate_normal(max_uvw);
-    outColor.rgb = calculate_lighting(cameraPosition, surfaceColor.rgb, rayPos, normal, metallic, roughness, 1.0) * 0.0 + vec3(max_intensity + threshold * 0.0);
+    outColor.rgb = calculate_lighting(cameraPosition, vec3(max_intensity), rayPos, vec3(1.0, 0.0, 0.0), 0.0, 1.0, 1.0);
     outColor.rgb = tone_mapping(outColor.rgb);
     outColor.rgb = color_mapping(outColor.rgb);
-    outColor.a = surfaceColor.a;
+    outColor.a = 1.0;
 }

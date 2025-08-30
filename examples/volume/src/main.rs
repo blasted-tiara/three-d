@@ -33,7 +33,7 @@ pub async fn run() {
         .unwrap()
         .deserialize("")
         .unwrap();
-    let mut voxel_grid = VoxelGrid::<IsosurfaceMaterial>::new(&context, &cpu_voxel_grid);
+    let voxel_grid = VoxelGrid::<VolumeProjectionMaterial>::new(&context, &cpu_voxel_grid);
 
     let ambient = AmbientLight::new(&context, 0.4, Srgba::WHITE);
     let directional1 = DirectionalLight::new(&context, 2.0, Srgba::WHITE, vec3(-1.0, -1.0, -1.0));
@@ -41,7 +41,6 @@ pub async fn run() {
 
     // main loop
     let mut gui = three_d::GUI::new(&context);
-    let mut color = [1.0; 4];
     window.render_loop(move |mut frame_input| {
         let mut panel_width = 0.0;
         gui.update(
@@ -53,16 +52,18 @@ pub async fn run() {
                 use three_d::egui::*;
                 SidePanel::left("side_panel").show(gui_context, |ui| {
                     ui.heading("Debug Panel");
+                    /*
                     ui.add(
                         Slider::new(&mut voxel_grid.material.threshold, 0.0..=1.0)
                             .text("Threshold"),
                     );
                     ui.color_edit_button_rgba_unmultiplied(&mut color);
+                    */
                 });
                 panel_width = gui_context.used_rect().width();
             },
         );
-        voxel_grid.material.color = Srgba::from(color);
+        //voxel_grid.material.color = Srgba::from(color);
 
         let viewport = Viewport {
             x: (panel_width * frame_input.device_pixel_ratio) as i32,

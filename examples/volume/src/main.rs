@@ -35,10 +35,6 @@ pub async fn run() {
         .unwrap();
     let mut voxel_grid = VoxelGrid::<VolumeProjectionMaterial>::new(&context, &cpu_voxel_grid);
 
-    let ambient = AmbientLight::new(&context, 0.4, Srgba::WHITE);
-    let directional1 = DirectionalLight::new(&context, 2.0, Srgba::WHITE, vec3(-1.0, -1.0, -1.0));
-    let directional2 = DirectionalLight::new(&context, 2.0, Srgba::WHITE, vec3(1.0, 1.0, 1.0));
-
     // main loop
     let mut gui = three_d::GUI::new(&context);
     window.render_loop(move |mut frame_input| {
@@ -91,7 +87,7 @@ pub async fn run() {
             .render(
                 &camera,
                 &voxel_grid,
-                &[&ambient, &directional1, &directional2],
+                &[],
             )
             .write(|| gui.render())
             .unwrap();

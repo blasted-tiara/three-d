@@ -17,7 +17,7 @@ void main() {
 
     float max_intensity = 0.0;
 
-    for (int i = 0; i < 200; i++) {
+    for (int i = 0; i < steps; i++) {
         if (rayPos.x < -0.501*size.x || rayPos.y < -0.501*size.y || rayPos.z < -0.501*size.z ||
         rayPos.x > 0.501*size.x || rayPos.y > 0.501*size.y || rayPos.z > 0.501*size.z) {
             // Out of bounds
@@ -30,14 +30,14 @@ void main() {
         }
 
         vec3 uvw = (rayPos / size) + 0.5;
-        if (texture(tex, uvw).r > max_intensity) {
-            max_intensity = texture(tex, uvw).r;
+        float val = texture(tex, uvw).r;
+        if (val > max_intensity) {
+            max_intensity = val;
         }
         rayPos += step;
     }
 
-    outColor.rgb = calculate_lighting(cameraPosition, vec3(max_intensity), rayPos, vec3(1.0, 0.0, 0.0), 0.0, 1.0, 1.0);
+    outColor = vec4(vec3(max_intensity), 1.0);
     outColor.rgb = tone_mapping(outColor.rgb);
     outColor.rgb = color_mapping(outColor.rgb);
-    outColor.a = 1.0;
 }

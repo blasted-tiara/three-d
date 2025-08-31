@@ -38,7 +38,7 @@ impl Material for VolumeProjectionMaterial {
         let mut source = lights_shader_source(lights);
         source.push_str(ToneMapping::fragment_shader_source());
         source.push_str(ColorMapping::fragment_shader_source());
-        source.push_str(include_str!("shaders/mip_material.frag"));
+        source.push_str(include_str!("shaders/volume_projection_material.frag"));
         source
     }
 

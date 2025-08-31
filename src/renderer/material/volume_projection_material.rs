@@ -19,14 +19,14 @@ pub struct VolumeProjectionMaterial {
 ///
 /// Rendering style of a volume projection. Supports several related styles.
 /// 
-#[derive(Clone, PartialEq)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum VolumeProjectionRenderingStyle {
     /// The color of the pixel will be the same as the minimum intensity encountered on the ray path.
-    MinimumIntensityProjection,
-    /// The color of the pixel will be the same as the maximum intensity encountered on the ray path.
-    MaximumIntansityProjection,
+    MinimumIntensityProjection = 0,
     /// The color of the pixel will be the same as the average intensity encountered on the ray path.
-    AverageIntensityProjection,
+    AverageIntensityProjection = 1,
+    /// The color of the pixel will be the same as the maximum intensity encountered on the ray path.
+    MaximumIntansityProjection = 2,
 }
 
 impl Material for VolumeProjectionMaterial {
@@ -38,17 +38,7 @@ impl Material for VolumeProjectionMaterial {
         let mut source = lights_shader_source(lights);
         source.push_str(ToneMapping::fragment_shader_source());
         source.push_str(ColorMapping::fragment_shader_source());
-        match self.rendering_style {
-            VolumeProjectionRenderingStyle::MaximumIntansityProjection => {
-                source.push_str(include_str!("shaders/mip_material.frag"));
-            },
-            VolumeProjectionRenderingStyle::MinimumIntensityProjection => {
-                source.push_str(include_str!("shaders/mip_material.frag"));
-            },
-            VolumeProjectionRenderingStyle::AverageIntensityProjection => {
-                source.push_str(include_str!("shaders/mip_material.frag"));
-            }
-        }
+        source.push_str(include_str!("shaders/mip_material.frag"));
         source
     }
 
@@ -60,6 +50,7 @@ impl Material for VolumeProjectionMaterial {
         }
         program.use_uniform("cameraPosition", viewer.position());
         program.use_uniform("size", self.size);
+        program.use_uniform("rendering_style", self.rendering_style.clone() as i32);
         program.use_texture_3d("tex", &self.voxels);
     }
     fn render_states(&self) -> RenderStates {
